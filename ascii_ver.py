@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+os.system('mode con cols=25 lines=15')
+os.system('title ChessGPT')
+
 openai.api_key = os.getenv('OPENAI_API_KEY')
 gpt_model = os.getenv('GPT_MODEL')
 
@@ -77,7 +80,7 @@ def gpt_move():
 while True:
     os.system('cls' if os.name == 'nt' else 'clear')
     
-    print(f'{board_text()}\n')
+    print(f'{board_text()}')
     
     if board.is_checkmate(): 
         print('Checkmate!')
