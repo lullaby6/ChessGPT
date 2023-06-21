@@ -72,10 +72,10 @@ while True:
 
     move_input = input(f'{turn.capitalize()} move: ') if turn == 'lower' else gpt_move()
     
-    move_result = re.search(r"\b([a-h][1-8][a-h][1-8])\b", move_input)
+    move_results = re.findall(r"\b([a-h][1-8][a-h][1-8])\b", move_input)
         
-    if move_result:
-        finish_move = move_result.group(1)
+    if not len(move_results) == 0:
+        finish_move = move_results[-1]
         
         move(finish_move)
         
