@@ -1,0 +1,5 @@
+chess
+pygame
+openai
+Pillow
+python-dotenv
