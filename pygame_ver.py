@@ -129,7 +129,8 @@ def gpt_move():
         try:
             chat = openai.ChatCompletion.create(model=gpt_model, messages=messages)
             reply = chat.choices[0].message.content
-        except:
+        except Exception as e:
+            print(e)
             time.sleep(0.5)
 
     messages.append({"role": "assistant", "content": reply})

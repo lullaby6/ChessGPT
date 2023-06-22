@@ -10,7 +10,6 @@ pip3 install -r requeriments.txt
 ## Setup
 
 Create an ".env" file and put your OPEN AI api key and the model you want to use.
-if you use GPT-4 you will have a better opponent, but by default it is set to GPT-3.5 Turbo model.
 
 ## Run
 
