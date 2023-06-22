@@ -2,7 +2,7 @@
 
 ## Run
 
-###Pygame version:
+Pygame version:
 ```sh
 python pygame_ver.py
 ```
@@ -10,7 +10,7 @@ python pygame_ver.py
 
 or
 
-###ASCII version:
+ASCII version:
 ```sh
 python ascii_ver.py
 ```
