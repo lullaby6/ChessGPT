@@ -71,8 +71,15 @@ def gpt_move():
     
     while len(messages) > 20: messages.pop(1)
         
-    chat = openai.ChatCompletion.create(model=gpt_model, messages=messages)
-    reply = chat.choices[0].message.content
+    reply = None
+    
+    while not reply:
+        try:
+            chat = openai.ChatCompletion.create(model=gpt_model, messages=messages)
+            reply = chat.choices[0].message.content
+        except: 
+            time.sleep(0.5)
+        
     messages.append({"role": "assistant", "content": reply})
                     
     return reply

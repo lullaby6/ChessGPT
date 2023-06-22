@@ -4,6 +4,7 @@ import openai
 import os
 import time
 import re
+import time
 from PIL import Image
 from dotenv import load_dotenv
 
@@ -116,14 +117,21 @@ def gpt_move():
     last_move_source_piece_name, last_move_dest_piece_name = pieces_names[str(last_move_source_piece_at)], pieces_names[str(last_move_dest_piece_at)]
     
     message = f'Last white pieces move: {last_move}, now {last_move_source_piece} is {last_move_source_piece_name} and {last_move_dest_piece} is {last_move_dest_piece_name}.\n\nUpdated board:\n\n{board_text()}'
-    print(message)
+    #print(message)
 
     messages.append({"role": "user", "content": message})
     
     while len(messages) > 20: messages.pop(1)
     
-    chat = openai.ChatCompletion.create(model=gpt_model, messages=messages)
-    reply = chat.choices[0].message.content
+    reply = None
+
+    while not reply:
+        try:
+            chat = openai.ChatCompletion.create(model=gpt_model, messages=messages)
+            reply = chat.choices[0].message.content
+        except:
+            time.sleep(0.5)
+
     messages.append({"role": "assistant", "content": reply})
                     
     move_results = re.findall(r"\b([a-h][1-8][a-h][1-8])\b", reply)
@@ -134,26 +142,21 @@ def gpt_move():
         if chess.Move.from_uci(finish_move) in board.legal_moves:
             move(finish_move)
         else:
-            print(f'Invalid {turn} move: {reply}')
+            #print(f'Invalid {turn} move: {reply}')
             source_piece, dest_piece = finish_move[0]+finish_move[1], finish_move[2]+finish_move[3]
             source_piece_at, dest_piece_at = board.piece_at(chess.parse_square(source_piece)), board.piece_at(chess.parse_square(dest_piece))
             if not source_piece_at: source_piece_at = '.'
             if not dest_piece_at: dest_piece_at = '.'
             source_piece_name, dest_piece_name = pieces_names[str(source_piece_at)], pieces_names[str(dest_piece_at)]
-   
-            last_move_source_piece, last_move_dest_piece = last_move[0]+last_move[1], last_move[2]+last_move[3]
-            last_move_source_piece_at, last_move_dest_piece_at = board.piece_at(chess.parse_square(last_move_source_piece)), board.piece_at(chess.parse_square(last_move_dest_piece))
-            if not last_move_source_piece_at: last_move_source_piece_at = '.'
-            if not last_move_dest_piece_at: last_move_dest_piece_at = '.'
-            last_move_source_piece_name, last_move_dest_piece_name = pieces_names[str(last_move_source_piece_at)], pieces_names[str(last_move_dest_piece_at)]
                         
             message = f'{finish_move} is not a valid move, {source_piece} is {source_piece_name} and {dest_piece} is {dest_piece_name}, please do valid moves.'
-            print(message)
+            #print(message)
             
             messages.append({"role": "user", "content": message})
+            time.sleep(0.1)
             gpt_move()
     else:
-        print(f'Invalid {turn} move input: {reply}')
+        #print(f'Invalid {turn} move input: {reply}')
         messages.append({"role": "user", "content": 'Please just reply with a move of four chars with the source piece and the dist position like "e4e4".'})
         gpt_move()
     
@@ -244,6 +247,6 @@ while running:
         pygame.draw.rect(screen, (0, 175, 0), (50 * selected_piece[0], 50 * selected_piece[1], 50, 50), 3)
     
     pygame.display.flip()
-    dt = clock.tick(60) / 1000
+    dt = clock.tick(10) / 1000
     
 pygame.quit()
